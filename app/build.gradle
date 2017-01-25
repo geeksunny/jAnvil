@@ -1,0 +1,23 @@
+project.version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: "de.fuerstenau.buildconfig"
+apply plugin: "com.github.johnrengelman.shadow"
+
+sourceCompatibility = 1.8
+
+mainClassName =  'com.radicalninja.anvil.Main'
+
+buildConfig {
+    appName = "Anvil"
+    // Logger's global configuration variables
+    def String str = "String"
+    //buildConfigField(str, "EXAMPLE", "value")
+}
+
+dependencies {
+    compile "com.beust:jcommander:1.61"
+    compile "com.google.code.gson:gson:2.8.0"
+    compile "org.ini4j:ini4j:0.5.4"
+}
