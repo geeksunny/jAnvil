@@ -1,26 +1,32 @@
 package com.radicalninja.anvil.config;
 
-import java.util.List;
-import java.util.Map;
-
 public class AnvilConfig {
 
-    public class RemoteConfig {
-        private String user;
-        private String server;
-        private int port;
-        private String publicKey;
-        private String destinationPath;
+    private String localPropertiesPath;
+
+    public String getLocalPropertiesPath() {
+        return localPropertiesPath;
     }
 
-    public class GradleConfig {
-        private String propertiesPathLocal;
-        private String propertiesPathRemote;
-        private Map<String, String> gradlePropertiesAdd;
-        private List<String> gradlePropertiesRemove;
+    public static final class Builder {
         private String localPropertiesPath;
-        private Map<String, String> localPropertiesContents;
-        private String buildWrapperFilename;
-    }
 
+        private Builder() {
+        }
+
+        public static Builder anAnvilConfig() {
+            return new Builder();
+        }
+
+        public Builder withLocalPropertiesPath(String localPropertiesPath) {
+            this.localPropertiesPath = localPropertiesPath;
+            return this;
+        }
+
+        public AnvilConfig build() {
+            AnvilConfig anvilConfig = new AnvilConfig();
+            anvilConfig.localPropertiesPath = this.localPropertiesPath;
+            return anvilConfig;
+        }
+    }
 }
