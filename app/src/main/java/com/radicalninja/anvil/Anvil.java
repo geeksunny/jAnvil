@@ -4,7 +4,7 @@ import com.beust.jcommander.Parameter;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.radicalninja.anvil.util.FileUtils;
+import com.radicalninja.anvil.util.SystemUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class Anvil {
         propsToAdd.put("com.radicalninja.anvil__", "AWESOME");
         final String exportPath = "./local.properties";
 
-        final File inFile = new File(FileUtils.expandHomePath("~/.gradle/gradle.properties"));
+        final File inFile = new File(SystemUtils.expandHomePath("~/.gradle/gradle.properties"));
         final GradleProperties properties = new GradleProperties(inFile);
 
         for (final Map.Entry<String, String> toAdd : propsToAdd.entrySet()) {

@@ -1,42 +1,55 @@
 package com.radicalninja.anvil;
 
+import com.radicalninja.anvil.config.Configuration;
+import com.radicalninja.anvil.config.ProjectConfig;
+import com.radicalninja.anvil.config.RemoteConfig;
+import com.radicalninja.anvil.util.ArrayUtils;
+
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
+import java.util.List;
 
-public class SyncTool {
+public class SyncTool extends Tool {
 
-    public static final String RSYNC_PATH_TEMPLATE = "%s@%s:%s";
+    private static final String SSH_PORT_TEMPLATE = "ssh -p %d";
+    private static final String RSYNC_PATH_TEMPLATE = "%s@%s:%s";
+    private static final String EXCLUDE_FILE_TEMPLATE = "--exclude=%s";
+    private static final String EXCLUDE_FROM_TEMPLATE = "--exclude-from=%s";
 
-    /**
-     * Generate a md5 hash of a given String.
-     * @param content String to be hashed.
-     * @return A String of the resulting md5 hash.
-     */
-    private String md5(final String content) {
-        try {
-            final MessageDigest m;
-            m = MessageDigest.getInstance("MD5");
-            m.update(content.getBytes());
-            final BigInteger hash = new BigInteger(1, m.digest());
-            return hash.toString(16);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public SyncTool(Configuration configuration) {
+        super(configuration);
     }
 
-    /**
-     * Generate a md5 hash of a given File.
-     * @param file The file to be hashed.
-     * @return A String of the resulting md5 hash.
-     */
-    private String md5(final File file) throws IOException {
-        final String content = new String(Files.readAllBytes(file.toPath()));
-        return md5(content);
+//    private void
+
+    private List<String> makeRsyncCommand() throws IOException {
+        final RemoteConfig remoteConfig = getConfiguration().getRemoteConfig();
+        final String sshPort = String.format(SSH_PORT_TEMPLATE, remoteConfig.getPort());
+        final List<String> cmd = new LinkedList<>();
+        ArrayUtils.addAll(cmd, "rsync", "-zP", "-e", sshPort, "-r");
+
+        final ProjectConfig projectConfig = getConfiguration().getProjectConfig();
+        // TODO: null checks for lists below
+        for (final String exclude : projectConfig.getExcludeFiles()) {
+            final String arg = String.format(EXCLUDE_FILE_TEMPLATE, exclude);
+            cmd.add(arg);
+        }
+        for (final String exclude : projectConfig.getExcludeFromFiles()) {
+            final String arg = String.format(EXCLUDE_FROM_TEMPLATE, exclude);
+            cmd.add(arg);
+        }
+        cmd.add(projectConfig.getDirectoryName());
+
+        final File remotePath = new File(projectConfig.getRemoteResultDirectory());
+        cmd.add(rsyncRemotePath(remotePath));
+        return cmd;
+    }
+
+    private String rsyncRemotePath(final File remoteFileDirectory) throws IOException {
+        final RemoteConfig remoteConfig = getConfiguration().getRemoteConfig();
+        return String.format(RSYNC_PATH_TEMPLATE, remoteConfig.getUsername(),
+                remoteConfig.getServer(), remoteFileDirectory.getCanonicalPath());
     }
 
 }

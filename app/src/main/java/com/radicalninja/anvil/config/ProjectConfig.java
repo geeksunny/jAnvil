@@ -7,6 +7,7 @@ import java.util.List;
 public class ProjectConfig {
 
     // Project file location
+    // TODO: Add some logic for ensuring there is a trailing slash.
     private String parentDirectory;
     private String directoryName;
     @SerializedName("package")
@@ -20,6 +21,42 @@ public class ProjectConfig {
     private List<String> excludeFiles;
     // gradle
     private String gradleBuildWrapperTask;
+
+    public String getParentDirectory() {
+        return parentDirectory;
+    }
+
+    public String getDirectoryName() {
+        return directoryName;
+    }
+
+    public String getProjectPackage() {
+        return projectPackage;
+    }
+
+    public String getStartActivity() {
+        return startActivity;
+    }
+
+    public String getRemoteResultDirectory() {
+        return remoteResultDirectory;
+    }
+
+    public String getRemoteResultFile() {
+        return remoteResultFile;
+    }
+
+    public List<String> getExcludeFromFiles() {
+        return excludeFromFiles;
+    }
+
+    public List<String> getExcludeFiles() {
+        return excludeFiles;
+    }
+
+    public String getGradleBuildWrapperTask() {
+        return gradleBuildWrapperTask;
+    }
 
     public static final class Builder {
         // Project file location
