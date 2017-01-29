@@ -41,7 +41,7 @@ public class SyncTool extends Tool {
         }
         cmd.add(projectConfig.getDirectoryName());
 
-        final File remotePath = new File(projectConfig.getRemoteResultDirectory());
+        final File remotePath = new HomeFile(projectConfig.getRemoteResultDirectory());
         cmd.add(rsyncRemotePath(remotePath));
         return cmd;
     }

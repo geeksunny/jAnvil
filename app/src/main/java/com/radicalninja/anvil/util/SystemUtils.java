@@ -43,10 +43,6 @@ public class SystemUtils {
         return md5(content);
     }
 
-    public static String expandHomePath(final String path) {
-        return path.replace("~", System.getProperty("user.home"));
-    }
-
     /**
      * Execute a shell command. Output is printed to system console.
      * @param commandArguments
