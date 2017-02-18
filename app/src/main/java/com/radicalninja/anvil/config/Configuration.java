@@ -7,6 +7,10 @@ import java.util.Map;
 
 public class Configuration {
 
+    public interface Config {
+        //
+    }
+
     @SerializedName("anvil")
     private AnvilConfig anvilConfig;
 

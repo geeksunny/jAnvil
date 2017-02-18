@@ -1,51 +1,44 @@
-package com.radicalninja.anvil;
+package com.radicalninja.anvil.data;
 
-import com.radicalninja.anvil.config.GradleConfig;
+import com.radicalninja.anvil.HomeFile;
+import com.radicalninja.anvil.config.Configuration;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class GradleProperties {
+public abstract class Properties<T extends Configuration.Config> {
 
     private static final String PARSE_REGEX = "^([^\\#\\s\\=]+)\\=([^\\n]+)$";  // flags: mg - m might not be necessary if read line by line
-    private static final String EXPORT_HEADER = "# auto-generated gradle properties";
 
     private final Map<String, String> properties = new LinkedHashMap<>();
 
-    public static GradleProperties fromGradleConfig(final GradleConfig config) throws IOException {
-        if (null == config || null == config.getPropertiesPathLocal()) {
-            return null;
+    public Properties(final T config) throws IOException {
+        if (null != config) {
+            parseConfig(config);
         }
-        final GradleProperties properties = new GradleProperties(config.getPropertiesPathLocal());
-        final List<String> remove = config.getGradlePropertiesRemove();
-        if (null != remove) {
-            for (final String prop : remove) {
-                properties.remove(prop);
-            }
-        }
-        final Map<String, String> add = config.getGradlePropertiesAdd();
-        if (null != add) {
-            for (final Map.Entry<String, String> prop : add.entrySet()) {
-                properties.add(prop.getKey(), prop.getValue());
-            }
-        }
-        return properties;
     }
 
-    public GradleProperties(final String filePath) throws IOException {
-        this(new HomeFile(filePath));
+    public Properties(final String filePath) throws IOException {
+        parseFile(filePath);
     }
 
-    public GradleProperties(final File file) throws IOException {
+    public Properties(final File file) throws IOException {
+        parseFile(file);
+    }
+
+    protected abstract void parseConfig(final T config) throws IOException;
+
+    public void parseFile(final String filePath) throws IOException {
+        parseFile(new HomeFile(filePath));
+    }
+
+    public void parseFile(final File file) throws IOException {
         final Pattern pattern = Pattern.compile(PARSE_REGEX);
 
         final Stream<String> lines = Files.lines(file.toPath());
@@ -54,10 +47,21 @@ public class GradleProperties {
             if (matcher.matches()) {
                 final String key = matcher.group(1);
                 final String value = matcher.group(2);
-                properties.put(key, value);
+                add(key, value);
             }
         });
         lines.close();
+    }
+
+    protected Set<Map.Entry<String, String>> getAll() {
+        return properties.entrySet();
+    }
+
+    public void set(final Map<String, String> contents) {
+        if (null != contents) {
+            properties.clear();
+            properties.putAll(contents);
+        }
     }
 
     public void add(final String key, final String value) {
@@ -77,10 +81,9 @@ public class GradleProperties {
         return String.format("%s=%s", key, value);
     }
 
-    private List<String> getExportLines() {
+    protected List<String> getExportLines() {
         final List<String> lines = new LinkedList<>();
-        lines.add(EXPORT_HEADER);
-        for (final Map.Entry<String, String> property : properties.entrySet()) {
+        for (final Map.Entry<String, String> property : getAll()) {
             final String line = makeLine(property.getKey(), property.getValue());
             lines.add(line);
         }

@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ProjectConfig {
+public class ProjectConfig implements Configuration.Config {
 
     // Project file location
     // TODO: Add some logic for ensuring there is a trailing slash.
-    private String parentDirectory;
-    private String directoryName;
+    private String path;
+    // TODO: Determine if the 'project_parent_dir' is still required, parse if so.
     @SerializedName("package")
     private String projectPackage;
     private String startActivity;
@@ -22,12 +22,8 @@ public class ProjectConfig {
     // gradle
     private String gradleBuildWrapperTask;
 
-    public String getParentDirectory() {
-        return parentDirectory;
-    }
-
-    public String getDirectoryName() {
-        return directoryName;
+    public String getPath() {
+        return path;
     }
 
     public String getProjectPackage() {
@@ -60,8 +56,7 @@ public class ProjectConfig {
 
     public static final class Builder {
         // Project file location
-        private String parentDirectory;
-        private String directoryName;
+        private String path;
         private String projectPackage;
         private String startActivity;
         // remote
@@ -80,13 +75,8 @@ public class ProjectConfig {
             return new Builder();
         }
 
-        public Builder withParentDirectory(String parentDirectory) {
-            this.parentDirectory = parentDirectory;
-            return this;
-        }
-
-        public Builder withDirectoryName(String directoryName) {
-            this.directoryName = directoryName;
+        public Builder withPath(String path) {
+            this.path = path;
             return this;
         }
 
@@ -130,12 +120,11 @@ public class ProjectConfig {
             projectConfig.startActivity = this.startActivity;
             projectConfig.gradleBuildWrapperTask = this.gradleBuildWrapperTask;
             projectConfig.projectPackage = this.projectPackage;
-            projectConfig.parentDirectory = this.parentDirectory;
             projectConfig.excludeFromFiles = this.excludeFromFiles;
             projectConfig.remoteResultDirectory = this.remoteResultDirectory;
             projectConfig.remoteResultFile = this.remoteResultFile;
             projectConfig.excludeFiles = this.excludeFiles;
-            projectConfig.directoryName = this.directoryName;
+            projectConfig.path = this.path;
             return projectConfig;
         }
     }

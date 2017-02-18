@@ -3,45 +3,52 @@ package com.radicalninja.anvil.config;
 import java.util.List;
 import java.util.Map;
 
-public class GradleConfig {
+public class GradleConfig implements Configuration.Config {
 
-    private String propertiesPathLocal;
-    private String propertiesPathRemote;
-    private Map<String, String> gradlePropertiesAdd;
-    private List<String> gradlePropertiesRemove;
-    private Map<String, String> localPropertiesContents;
+    private String userPropertiesPath;
+    private String projectPropertiesFilename;
+    private String projectLocalPropertiesFilename;
+    private Map<String, String> projectPropertiesAdd;
+    private List<String> projectPropertiesRemove;
+    private Map<String, String> projectLocalPropertiesContents;
     private String buildWrapperFilename;
 
     public String getPropertiesPathLocal() {
-        return propertiesPathLocal;
+        return userPropertiesPath;
     }
 
     public String getPropertiesPathRemote() {
-        return propertiesPathRemote;
+        return projectPropertiesFilename;
+    }
+
+    public String getProjectLocalPropertiesFilename() {
+        return projectLocalPropertiesFilename;
     }
 
     public Map<String, String> getGradlePropertiesAdd() {
-        return gradlePropertiesAdd;
+        return projectPropertiesAdd;
     }
 
     public List<String> getGradlePropertiesRemove() {
-        return gradlePropertiesRemove;
+        return projectPropertiesRemove;
     }
 
     public Map<String, String> getLocalPropertiesContents() {
-        return localPropertiesContents;
+        return projectLocalPropertiesContents;
     }
 
     public String getBuildWrapperFilename() {
         return buildWrapperFilename;
     }
 
+
     public static final class Builder {
-        private String propertiesPathLocal;
-        private String propertiesPathRemote;
-        private Map<String, String> gradlePropertiesAdd;
-        private List<String> gradlePropertiesRemove;
-        private Map<String, String> localPropertiesContents;
+        private String userPropertiesPath;
+        private String projectPropertiesFilename;
+        private String projectLocalPropertiesFilename;
+        private Map<String, String> projectPropertiesAdd;
+        private List<String> projectPropertiesRemove;
+        private Map<String, String> projectLocalPropertiesContents;
         private String buildWrapperFilename;
 
         private Builder() {
@@ -51,28 +58,33 @@ public class GradleConfig {
             return new Builder();
         }
 
-        public Builder withPropertiesPathLocal(String propertiesPathLocal) {
-            this.propertiesPathLocal = propertiesPathLocal;
+        public Builder withUserPropertiesPath(String userPropertiesPath) {
+            this.userPropertiesPath = userPropertiesPath;
             return this;
         }
 
-        public Builder withPropertiesPathRemote(String propertiesPathRemote) {
-            this.propertiesPathRemote = propertiesPathRemote;
+        public Builder withProjectPropertiesFilename(String projectPropertiesFilename) {
+            this.projectPropertiesFilename = projectPropertiesFilename;
             return this;
         }
 
-        public Builder withGradlePropertiesAdd(Map<String, String> gradlePropertiesAdd) {
-            this.gradlePropertiesAdd = gradlePropertiesAdd;
+        public Builder withProjectLocalPropertiesFilename(String projectLocalPropertiesFilename) {
+            this.projectLocalPropertiesFilename = projectLocalPropertiesFilename;
             return this;
         }
 
-        public Builder withGradlePropertiesRemove(List<String> gradlePropertiesRemove) {
-            this.gradlePropertiesRemove = gradlePropertiesRemove;
+        public Builder withProjectPropertiesAdd(Map<String, String> projectPropertiesAdd) {
+            this.projectPropertiesAdd = projectPropertiesAdd;
             return this;
         }
 
-        public Builder withLocalPropertiesContents(Map<String, String> localPropertiesContents) {
-            this.localPropertiesContents = localPropertiesContents;
+        public Builder withProjectPropertiesRemove(List<String> projectPropertiesRemove) {
+            this.projectPropertiesRemove = projectPropertiesRemove;
+            return this;
+        }
+
+        public Builder withProjectLocalPropertiesContents(Map<String, String> projectLocalPropertiesContents) {
+            this.projectLocalPropertiesContents = projectLocalPropertiesContents;
             return this;
         }
 
@@ -83,12 +95,13 @@ public class GradleConfig {
 
         public GradleConfig build() {
             GradleConfig gradleConfig = new GradleConfig();
-            gradleConfig.gradlePropertiesAdd = this.gradlePropertiesAdd;
-            gradleConfig.gradlePropertiesRemove = this.gradlePropertiesRemove;
-            gradleConfig.propertiesPathRemote = this.propertiesPathRemote;
+            gradleConfig.projectPropertiesAdd = this.projectPropertiesAdd;
+            gradleConfig.projectLocalPropertiesContents = this.projectLocalPropertiesContents;
+            gradleConfig.projectPropertiesFilename = this.projectPropertiesFilename;
             gradleConfig.buildWrapperFilename = this.buildWrapperFilename;
-            gradleConfig.localPropertiesContents = this.localPropertiesContents;
-            gradleConfig.propertiesPathLocal = this.propertiesPathLocal;
+            gradleConfig.userPropertiesPath = this.userPropertiesPath;
+            gradleConfig.projectPropertiesRemove = this.projectPropertiesRemove;
+            gradleConfig.projectLocalPropertiesFilename = this.projectLocalPropertiesFilename;
             return gradleConfig;
         }
     }

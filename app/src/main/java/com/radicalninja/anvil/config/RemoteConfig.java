@@ -1,6 +1,6 @@
 package com.radicalninja.anvil.config;
 
-public class RemoteConfig {
+public class RemoteConfig implements Configuration.Config {
 
     private String username;
     private String server;
