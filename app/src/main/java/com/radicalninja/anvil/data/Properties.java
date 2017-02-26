@@ -7,7 +7,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -53,10 +56,6 @@ public abstract class Properties<T extends Configuration.Config> {
         lines.close();
     }
 
-    protected Set<Map.Entry<String, String>> getAll() {
-        return properties.entrySet();
-    }
-
     public void set(final Map<String, String> contents) {
         if (null != contents) {
             properties.clear();
@@ -83,11 +82,15 @@ public abstract class Properties<T extends Configuration.Config> {
 
     protected List<String> getExportLines() {
         final List<String> lines = new LinkedList<>();
-        for (final Map.Entry<String, String> property : getAll()) {
+        for (final Map.Entry<String, String> property : properties.entrySet()) {
             final String line = makeLine(property.getKey(), property.getValue());
             lines.add(line);
         }
         return lines;
     }
 
+    @Override
+    public String toString() {
+        return String.join("\n", getExportLines());
+    }
 }
