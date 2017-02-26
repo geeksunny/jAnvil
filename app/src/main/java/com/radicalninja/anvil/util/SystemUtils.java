@@ -1,6 +1,7 @@
 package com.radicalninja.anvil.util;
 
 import com.sun.istack.internal.NotNull;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,7 +21,7 @@ public class SystemUtils {
      * @param content String to be hashed.
      * @return A String of the resulting md5 hash.
      */
-    private String md5(final String content) {
+    public static String md5(final String content) {
         try {
             final MessageDigest m;
             m = MessageDigest.getInstance("MD5");
@@ -38,7 +39,7 @@ public class SystemUtils {
      * @param file The file to be hashed.
      * @return A String of the resulting md5 hash.
      */
-    private String md5(final File file) throws IOException {
+    public static String md5(final File file) throws IOException {
         final String content = new String(Files.readAllBytes(file.toPath()));
         return md5(content);
     }
@@ -60,6 +61,10 @@ public class SystemUtils {
     public static void executeShellCommand(
             final List<String> commandArguments, @NotNull final Consumer<String> outputConsumer) {
 
+        if (ArrayUtils.isEmpty(commandArguments)) {
+            // TODO : maybe return boolean false here since failstate?
+            return;
+        }
         try {
             final String[] args = new String[commandArguments.size()];
             commandArguments.toArray(args);
@@ -70,6 +75,12 @@ public class SystemUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String createPath(final String parent, final String child) {
+        final String pathParent = StringUtils.stripEnd(parent, "/");
+        final String pathChild = StringUtils.stripStart(child, "/");
+        return String.format("%s/%s", pathParent, pathChild);
     }
 
 }
