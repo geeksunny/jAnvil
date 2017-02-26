@@ -19,5 +19,5 @@ buildConfig {
 dependencies {
     compile "com.beust:jcommander:1.61"
     compile "com.google.code.gson:gson:2.8.0"
-    compile "org.ini4j:ini4j:0.5.4"
+    compile "com.jcabi:jcabi-ssh:1.5.2"
 }
