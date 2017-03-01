@@ -84,4 +84,15 @@ public class SystemUtils {
         return String.format("%s/%s", pathParent, pathChild);
     }
 
+    public static String getFileContents(final File file) throws IOException {
+        final StringBuilder sb = new StringBuilder();
+        Files.lines(file.toPath()).forEach(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                sb.append(s);
+            }
+        });
+        return sb.toString();
+    }
+
 }

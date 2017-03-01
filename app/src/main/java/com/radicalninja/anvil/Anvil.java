@@ -4,13 +4,13 @@ import com.beust.jcommander.Parameter;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.radicalninja.anvil.config.Configuration;
+import com.radicalninja.anvil.util.SystemUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Anvil {
 
@@ -28,20 +28,15 @@ public class Anvil {
         }
     }
 
+    public Configuration loadConfig(final File file) throws IOException {
+        final String json = SystemUtils.getFileContents(file);
+        return gson.fromJson(json, Configuration.class);
+    }
+
     public void run() throws IOException {
-        final Map<String, String> propsToAdd = new HashMap<>();
-        propsToAdd.put("com.radicalninja.anvil", "true");
-        propsToAdd.put("com.radicalninja.anvil_", "false");
-        propsToAdd.put("com.radicalninja.anvil__", "AWESOME");
-        final String exportPath = "./local.properties";
-
-        final File inFile = new HomeFile("~/.gradle/gradle.properties");
-        final GradleProperties properties = new GradleProperties(inFile);
-
-        for (final Map.Entry<String, String> toAdd : propsToAdd.entrySet()) {
-            properties.add(toAdd.getKey(), toAdd.getValue());
-        }
-        properties.export(new HomeFile(exportPath));
+        final Configuration configuration = loadConfig(new File("acmoore.json"));
+        final SyncTool syncTool = new SyncTool(configuration);
+        syncTool.doSyncOperations();
     }
 
     public static class Arguments {

@@ -27,6 +27,13 @@ public class SyncTool extends Tool {
         super(configuration);
     }
 
+    public void doSyncOperations() throws IOException {
+        syncSource();
+        // TODO: Clean this up
+        updateGradleProperties();
+        updateLocalProperties();
+    }
+
     public void syncSource() {
         final List<String> cmd;
         try {
@@ -92,6 +99,7 @@ public class SyncTool extends Tool {
     }
 
     private List<String> generateAndSyncFileCommand(final Properties properties, final String filename) throws IOException {
+        // TODO: Implement local cache filenames/paths
         final String parent = getConfiguration().getProjectConfig().getPath();
         final File file = new HomeFile(parent, filename);
         if (file.exists()) {
