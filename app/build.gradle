@@ -17,6 +17,7 @@ buildConfig {
 }
 
 dependencies {
+    compile "com.google.code.findbugs:jsr305:3.0.1"
     compile "com.beust:jcommander:1.61"
     compile "com.google.code.gson:gson:2.8.0"
     compile "com.jcabi:jcabi-ssh:1.5.2"

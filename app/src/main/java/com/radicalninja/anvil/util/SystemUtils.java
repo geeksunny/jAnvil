@@ -1,8 +1,8 @@
 package com.radicalninja.anvil.util;
 
-import com.sun.istack.internal.NotNull;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.NotNull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +58,7 @@ public class SystemUtils {
      * @param commandArguments
      * @param outputConsumer
      */
+    // TODO: Remove @NotNull here?
     public static void executeShellCommand(
             final List<String> commandArguments, @NotNull final Consumer<String> outputConsumer) {
 
