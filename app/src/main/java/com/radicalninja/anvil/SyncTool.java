@@ -10,6 +10,7 @@ import com.radicalninja.anvil.data.Properties;
 import com.radicalninja.anvil.util.ArrayUtils;
 import com.radicalninja.anvil.util.SystemUtils;
 import com.radicalninja.anvil.util.TextUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,11 +60,14 @@ public class SyncTool extends Tool {
         final ProjectConfig projectConfig = getConfiguration().getProjectConfig();
         TextUtils.addFormattedStrings(cmd, projectConfig.getExcludeFiles(), EXCLUDE_FILE_TEMPLATE);
         TextUtils.addFormattedStrings(cmd, projectConfig.getExcludeFromFiles(), EXCLUDE_FROM_TEMPLATE);
-        cmd.add(projectConfig.getPath());
+        // TODO: Clean this junk up. Should probably go into a method?
+        final String projectPath = StringUtils.stripEnd(projectConfig.getPath(), "/");
+        cmd.add(HomeFile.expandHomePath(projectPath));
 
-        // TODO: Should this use HomeFile()? Maybe remote paths should always be relative(/absolute?)
         final RemoteConfig remoteConfig = getConfiguration().getRemoteConfig();
         cmd.add(rsyncRemotePath(remoteConfig.getDestinationPath()));
+//        final String full = String.join(" ", cmd);
+//        System.out.printf("\n\n%s\n\n", full);
         return cmd;
     }
 

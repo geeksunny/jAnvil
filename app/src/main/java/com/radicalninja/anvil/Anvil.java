@@ -35,6 +35,8 @@ public class Anvil {
 
     public void run() throws IOException {
         final Configuration configuration = loadConfig(new File("acmoore.json"));
+        SystemUtils.setWorkingDirectory(configuration.getProjectConfig().getPath());
+
         final SyncTool syncTool = new SyncTool(configuration);
         syncTool.doSyncOperations();
     }

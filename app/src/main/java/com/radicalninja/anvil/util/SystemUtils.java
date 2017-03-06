@@ -1,12 +1,10 @@
 package com.radicalninja.anvil.util;
 
+import com.radicalninja.anvil.HomeFile;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.security.MessageDigest;
@@ -15,6 +13,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class SystemUtils {
+
+    private static File workingDirectory = new File(".");
 
     /**
      * Generate a md5 hash of a given String.
@@ -49,8 +49,17 @@ public class SystemUtils {
      * @param commandArguments
      */
     public static void executeShellCommand(final List<String> commandArguments) {
-        final Consumer<String> consumer = System.out::print;
-        executeShellCommand(commandArguments, consumer);
+        final Consumer<String> consumer = System.out::println;
+        executeShellCommand(commandArguments, workingDirectory, consumer);
+    }
+
+    /**
+     * Execute a shell command. Output is printed to system console.
+     * @param commandArguments
+     */
+    public static void executeShellCommand(final List<String> commandArguments, final File dir) {
+        final Consumer<String> consumer = System.out::println;
+        executeShellCommand(commandArguments, dir, consumer);
     }
 
     /**
@@ -60,7 +69,7 @@ public class SystemUtils {
      */
     // TODO: Remove @NotNull here?
     public static void executeShellCommand(
-            final List<String> commandArguments, @NotNull final Consumer<String> outputConsumer) {
+            final List<String> commandArguments, final File dir, @NotNull final Consumer<String> outputConsumer) {
 
         if (ArrayUtils.isEmpty(commandArguments)) {
             // TODO : maybe return boolean false here since failstate?
@@ -69,10 +78,12 @@ public class SystemUtils {
         try {
             final String[] args = new String[commandArguments.size()];
             commandArguments.toArray(args);
-            final Process p = Runtime.getRuntime().exec(args);
+            final Process p = Runtime.getRuntime().exec(args, null, dir);
+            final Thread outputThread = new Thread(new OutputReader(p.getInputStream()));
+            final Thread errorThread = new Thread(new OutputReader(p.getErrorStream()));
+            outputThread.start();
+            errorThread.start();
             p.waitFor();
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            reader.lines().forEach(outputConsumer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,6 +104,32 @@ public class SystemUtils {
             }
         });
         return sb.toString();
+    }
+
+    public static void setWorkingDirectory(final String path) {
+        workingDirectory = new HomeFile(path);
+    }
+
+    public static class OutputReader implements Runnable {
+        final InputStream inputStream;
+
+        public OutputReader(InputStream inputStream) {
+            this.inputStream = inputStream;
+        }
+
+        @Override
+        public void run() {
+            try {
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String text = null;
+                while ((text = reader.readLine()) != null) {
+                    System.out.println(text);
+                }
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

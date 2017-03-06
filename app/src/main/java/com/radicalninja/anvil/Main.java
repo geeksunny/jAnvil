@@ -2,8 +2,6 @@ package com.radicalninja.anvil;
 
 import com.beust.jcommander.JCommander;
 
-import java.io.IOException;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -11,8 +9,10 @@ public class Main {
         new JCommander(anvilArgs, args);
         final Anvil anvil = new Anvil(anvilArgs);
         try {
+            System.out.println("Starting job.");
             anvil.run();
-        } catch (IOException e) {
+            System.out.println("Job's finished.");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
