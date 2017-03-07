@@ -1,13 +1,13 @@
 package com.radicalninja.anvil;
 
-import com.jcabi.log.Logger;
 import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.logging.Level;
 
 public class RemoteSession {
 
@@ -29,7 +29,7 @@ public class RemoteSession {
         final File keyFile = new File(keyPath);
         final String privateKey = new String(Files.readAllBytes(keyFile.toPath()));
 
-        shell = new SSH(server, port, username, keyPath);
+        shell = new SSH(server, port, username, privateKey);
     }
 
     public void executeShellCommand(final String[] cmd) throws IOException {
@@ -38,10 +38,9 @@ public class RemoteSession {
     }
 
     public void executeShellCommand(final String cmd) throws IOException {
-        final int result = shell.exec(cmd, null,//NULL OK HERE?
-                Logger.stream(Level.INFO, this),
-                Logger.stream(Level.WARNING, this));
-        Logger.stream(Level.INFO, this);
+        final OutputStream bos = new BufferedOutputStream(System.out);
+        final int result = shell.exec(cmd, null, bos, bos);
+        // Should we consume the result value?
     }
 
 }

@@ -24,11 +24,12 @@ public class BuildTool extends Tool {
     private RemoteSession createRemoteSession() throws IOException {
         // TODO: does keyfile path need preparation? Should it be a File object?
         final RemoteConfig config = getConfiguration().getRemoteConfig();
-        return new RemoteSession(config.getServer(), config.getPort(), config.getUsername(), config.getPublicKey());
+        final String keyPath = HomeFile.expandHomePath(config.getPublicKey());
+        return new RemoteSession(config.getServer(), config.getPort(), config.getUsername(), keyPath);
     }
 
     private String createBuildCommand(final String gradleTask) {
-        final String destination = getConfiguration().getRemoteConfig().getDestinationPath();
+        final String destination = SystemUtils.createPath(getConfiguration().getRemoteConfig().getDestinationPath(), destDirName);
         final GradleConfig config = getConfiguration().getGradleConfig();
         final String gradlew = SystemUtils.createPath(destination, config.getBuildWrapperFilename());
         return String.format(BUILD_CMD_TEMPLATE, gradlew, destination, gradleTask);

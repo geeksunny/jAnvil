@@ -78,10 +78,16 @@ public class SystemUtils {
         }
     }
 
-    public static String createPath(final String parent, final String child) {
+    public static String createPath(final String parent, final String ... children) {
+        final StringBuilder sb = new StringBuilder();
         final String pathParent = StringUtils.stripEnd(parent, "/");
-        final String pathChild = StringUtils.stripStart(child, "/");
-        return String.format("%s/%s", pathParent, pathChild);
+        sb.append(pathParent);
+        for (final String child : children) {
+            sb.append("/");
+            final String pathChild = StringUtils.stripStart(child, "/");
+            sb.append(pathChild);
+        }
+        return sb.toString();
     }
 
     public static String getFileContents(final File file) throws IOException {

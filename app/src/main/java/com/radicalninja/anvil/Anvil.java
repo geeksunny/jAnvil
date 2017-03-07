@@ -34,11 +34,15 @@ public class Anvil {
     }
 
     public void run() throws IOException {
+        // TODO: add a timer for the whole operation
         final Configuration configuration = loadConfig(new File("acmoore.json"));
         SystemUtils.setWorkingDirectory(configuration.getProjectConfig().getPath());
 
         final SyncTool syncTool = new SyncTool(configuration);
         syncTool.doSyncOperations();
+
+        final BuildTool buildTool = new BuildTool(configuration);
+        buildTool.executeGradleTask("assembleStagingDebug");
     }
 
     public static class Arguments {

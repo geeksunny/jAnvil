@@ -24,8 +24,6 @@ public class SyncTool extends Tool {
     private static final String EXCLUDE_FILE_TEMPLATE = "--exclude=%s";
     private static final String EXCLUDE_FROM_TEMPLATE = "--exclude-from=%s";
 
-    private String destDirName;
-
     public SyncTool(Configuration configuration) {
         super(configuration);
     }
@@ -109,7 +107,6 @@ public class SyncTool extends Tool {
     }
 
     private List<String> generateAndSyncFileCommand(final Properties properties, final String filename) throws IOException {
-        // TODO: Implement local cache filenames/paths
         final String grandparent = getConfiguration().getProjectConfig().getPath();
         final String tempDirName = getConfiguration().getAnvilConfig().getTempDirName();
         final String parent = SystemUtils.createPath(grandparent, tempDirName);
@@ -124,7 +121,6 @@ public class SyncTool extends Tool {
         properties.export(file);
 
         final List<String> cmd = createBaseSyncCommand();
-        // todo: create rsync command
         cmd.add(file.getCanonicalPath());
         final String destParent = SystemUtils.createPath(getConfiguration().getRemoteConfig().getDestinationPath(), destDirName);
         final String remotePath = rsyncRemotePath(destParent, filename);
