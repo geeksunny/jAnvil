@@ -72,6 +72,7 @@ public abstract class Properties<T extends Configuration.Config> {
     }
 
     public void export(final File destination) throws IOException {
+        Files.createDirectories(destination.getParentFile().toPath());
         Files.write(destination.toPath(), getExportLines(),
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
     }

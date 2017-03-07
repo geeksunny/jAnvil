@@ -24,6 +24,8 @@ public class SyncTool extends Tool {
     private static final String EXCLUDE_FILE_TEMPLATE = "--exclude=%s";
     private static final String EXCLUDE_FROM_TEMPLATE = "--exclude-from=%s";
 
+    private String destDirName;
+
     public SyncTool(Configuration configuration) {
         super(configuration);
     }
@@ -61,6 +63,10 @@ public class SyncTool extends Tool {
         TextUtils.addFormattedStrings(cmd, projectConfig.getExcludeFiles(), EXCLUDE_FILE_TEMPLATE);
         TextUtils.addFormattedStrings(cmd, projectConfig.getExcludeFromFiles(), EXCLUDE_FROM_TEMPLATE);
         // TODO: Clean this junk up. Should probably go into a method?
+        final File dest = new HomeFile(projectConfig.getPath());
+        destDirName = dest.getName();
+        // TODO: should we use dest below, too?
+        // No trailing slash = rsync whole dir at once
         final String projectPath = StringUtils.stripEnd(projectConfig.getPath(), "/");
         cmd.add(HomeFile.expandHomePath(projectPath));
 
@@ -104,7 +110,9 @@ public class SyncTool extends Tool {
 
     private List<String> generateAndSyncFileCommand(final Properties properties, final String filename) throws IOException {
         // TODO: Implement local cache filenames/paths
-        final String parent = getConfiguration().getProjectConfig().getPath();
+        final String grandparent = getConfiguration().getProjectConfig().getPath();
+        final String tempDirName = getConfiguration().getAnvilConfig().getTempDirName();
+        final String parent = SystemUtils.createPath(grandparent, tempDirName);
         final File file = new HomeFile(parent, filename);
         if (file.exists()) {
             final String newMd5 = SystemUtils.md5(properties.toString());
@@ -118,7 +126,7 @@ public class SyncTool extends Tool {
         final List<String> cmd = createBaseSyncCommand();
         // todo: create rsync command
         cmd.add(file.getCanonicalPath());
-        final String destParent = getConfiguration().getRemoteConfig().getDestinationPath();
+        final String destParent = SystemUtils.createPath(getConfiguration().getRemoteConfig().getDestinationPath(), destDirName);
         final String remotePath = rsyncRemotePath(destParent, filename);
         cmd.add(remotePath);
         return cmd;

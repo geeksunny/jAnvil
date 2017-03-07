@@ -3,7 +3,6 @@ package com.radicalninja.anvil.util;
 import com.radicalninja.anvil.HomeFile;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -49,27 +48,17 @@ public class SystemUtils {
      * @param commandArguments
      */
     public static void executeShellCommand(final List<String> commandArguments) {
-        final Consumer<String> consumer = System.out::println;
-        executeShellCommand(commandArguments, workingDirectory, consumer);
-    }
-
-    /**
-     * Execute a shell command. Output is printed to system console.
-     * @param commandArguments
-     */
-    public static void executeShellCommand(final List<String> commandArguments, final File dir) {
-        final Consumer<String> consumer = System.out::println;
-        executeShellCommand(commandArguments, dir, consumer);
+        executeShellCommand(commandArguments, workingDirectory);
     }
 
     /**
      * Execute a shell command.
      * @param commandArguments
-     * @param outputConsumer
+     * @param dir
      */
     // TODO: Remove @NotNull here?
     public static void executeShellCommand(
-            final List<String> commandArguments, final File dir, @NotNull final Consumer<String> outputConsumer) {
+            final List<String> commandArguments, final File dir) {
 
         if (ArrayUtils.isEmpty(commandArguments)) {
             // TODO : maybe return boolean false here since failstate?
