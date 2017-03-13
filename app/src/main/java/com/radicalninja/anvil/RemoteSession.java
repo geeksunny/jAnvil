@@ -96,7 +96,7 @@ public class RemoteSession {
             // read '0644'
             in.read(buf, 0, 5);
 
-            long filesize = 9L;
+            long filesize = 0L;
             while (true) {
                 if (in.read(buf, 0, 1) < 0) {
                     // error
