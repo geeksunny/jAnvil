@@ -1,5 +1,6 @@
 package com.radicalninja.anvil;
 
+import com.jcraft.jsch.JSchException;
 import com.radicalninja.anvil.config.Configuration;
 import com.radicalninja.anvil.config.GradleConfig;
 import com.radicalninja.anvil.config.RemoteConfig;
@@ -11,21 +12,26 @@ public class BuildTool extends Tool {
 
     private static final String BUILD_CMD_TEMPLATE = "%s -p %s %s";
 
+    private RemoteSession session;
+
     public BuildTool(Configuration configuration) {
         super(configuration);
     }
 
-    public void executeGradleTask(final String gradleTask) throws IOException {
-        final RemoteSession session = createRemoteSession();
+    public void executeGradleTask(final String gradleTask) throws IOException, JSchException {
+        createRemoteSession();
         final String cmd = createBuildCommand(gradleTask);
-        session.executeShellCommand(cmd);
+        session.exec(cmd);
     }
 
-    private RemoteSession createRemoteSession() throws IOException {
+    private void createRemoteSession() throws IOException, JSchException {
+        if (null != session && session.isConnected()) {
+            return;
+        }
         // TODO: does keyfile path need preparation? Should it be a File object?
         final RemoteConfig config = getConfiguration().getRemoteConfig();
         final String keyPath = HomeFile.expandHomePath(config.getPublicKey());
-        return new RemoteSession(config.getServer(), config.getPort(), config.getUsername(), keyPath);
+        session = new RemoteSession(config.getServer(), config.getPort(), config.getUsername(), keyPath);
     }
 
     private String createBuildCommand(final String gradleTask) {
