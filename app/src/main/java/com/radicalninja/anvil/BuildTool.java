@@ -4,6 +4,7 @@ import com.jcraft.jsch.JSchException;
 import com.radicalninja.anvil.config.Configuration;
 import com.radicalninja.anvil.config.GradleConfig;
 import com.radicalninja.anvil.config.RemoteConfig;
+import com.radicalninja.anvil.ssh.ExecRemoteSession;
 import com.radicalninja.anvil.util.SystemUtils;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class BuildTool extends Tool {
 
     private static final String BUILD_CMD_TEMPLATE = "%s -p %s %s";
 
-    private RemoteSession session;
+    private ExecRemoteSession session;
 
     public BuildTool(Configuration configuration) {
         super(configuration);
@@ -31,7 +32,7 @@ public class BuildTool extends Tool {
         // TODO: does keyfile path need preparation? Should it be a File object?
         final RemoteConfig config = getConfiguration().getRemoteConfig();
         final String keyPath = HomeFile.expandHomePath(config.getPublicKey());
-        session = new RemoteSession(config.getServer(), config.getPort(), config.getUsername(), keyPath);
+        session = new ExecRemoteSession(config.getServer(), config.getPort(), config.getUsername(), keyPath);
     }
 
     private String createBuildCommand(final String gradleTask) {
