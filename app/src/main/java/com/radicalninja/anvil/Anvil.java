@@ -5,6 +5,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import com.radicalninja.anvil.config.Configuration;
 import com.radicalninja.anvil.util.SystemUtils;
 
@@ -34,7 +35,7 @@ public class Anvil {
         return gson.fromJson(json, Configuration.class);
     }
 
-    public void run() throws IOException, JSchException {
+    public void run() throws IOException, JSchException, SftpException, InterruptedException {
         // TODO: add a timer for the whole operation
         final Configuration configuration = loadConfig(new File("acmoore.json"));
         SystemUtils.setWorkingDirectory(configuration.getProjectConfig().getPath());

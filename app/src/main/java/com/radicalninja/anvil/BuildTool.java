@@ -1,12 +1,16 @@
 package com.radicalninja.anvil;
 
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import com.radicalninja.anvil.config.Configuration;
 import com.radicalninja.anvil.config.GradleConfig;
 import com.radicalninja.anvil.config.RemoteConfig;
 import com.radicalninja.anvil.ssh.ExecRemoteSession;
+import com.radicalninja.anvil.ssh.SftpRemoteSession;
 import com.radicalninja.anvil.util.SystemUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class BuildTool extends Tool {
@@ -40,6 +44,15 @@ public class BuildTool extends Tool {
         final GradleConfig config = getConfiguration().getGradleConfig();
         final String gradlew = SystemUtils.createPath(destination, config.getBuildWrapperFilename());
         return String.format(BUILD_CMD_TEMPLATE, gradlew, destination, gradleTask);
+    }
+
+    public void testScp() throws JSchException, InterruptedException, SftpException, FileNotFoundException {
+        final File keyFile = new HomeFile("~/.ssh/id_rsa");
+        final SftpRemoteSession session =
+                new SftpRemoteSession("drone.local", 9022, "worker", keyFile);
+        session.connect();
+        session.get("/home/worker/temp.properties", "/Users/Sunny/_TEMP.PROPERTIES2222");
+        session.close();
     }
 
 }

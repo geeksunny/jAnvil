@@ -97,7 +97,7 @@ class DownloadProgressMonitor implements SftpProgressMonitor {
 
         @Override
         public String toString() {
-            return String.format("%d.%d%", major, minor);
+            return String.format("%d.%d%%", major, minor);
         }
     }
 

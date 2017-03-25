@@ -4,7 +4,6 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 
 import java.io.*;
-import java.nio.file.Path;
 
 public class ExecRemoteSession extends RemoteSession<ChannelExec> {
 
@@ -12,12 +11,12 @@ public class ExecRemoteSession extends RemoteSession<ChannelExec> {
         super(server, port, username, password);
     }
 
-    public ExecRemoteSession(String server, int port, String username, Path keyPath) throws JSchException {
-        super(server, port, username, keyPath);
+    public ExecRemoteSession(String server, int port, String username, File prvKey) throws JSchException {
+        super(server, port, username, prvKey);
     }
 
-    public ExecRemoteSession(String server, int port, String username, Path keyPath, String passphrase) throws JSchException {
-        super(server, port, username, keyPath, passphrase);
+    public ExecRemoteSession(String server, int port, String username, File prvKey, String passphrase) throws JSchException {
+        super(server, port, username, prvKey, passphrase);
     }
 
     @Override
