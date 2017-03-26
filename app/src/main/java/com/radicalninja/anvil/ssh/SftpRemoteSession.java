@@ -18,12 +18,12 @@ public class SftpRemoteSession extends RemoteSession<ChannelSftp> {
         super(server, port, username, password);
     }
 
-    public SftpRemoteSession(String server, int port, String username, File keyPath) throws JSchException {
-        super(server, port, username, keyPath);
+    public SftpRemoteSession(String server, int port, String username, File prvKey) throws JSchException {
+        super(server, port, username, prvKey);
     }
 
-    public SftpRemoteSession(String server, int port, String username, File keyPath, String passphrase) throws JSchException {
-        super(server, port, username, keyPath, passphrase);
+    public SftpRemoteSession(String server, int port, String username, File prvKey, String passphrase) throws JSchException {
+        super(server, port, username, prvKey, passphrase);
     }
 
     @Override

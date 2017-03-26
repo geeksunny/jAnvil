@@ -35,8 +35,8 @@ public class BuildTool extends Tool {
         }
         // TODO: does keyfile path need preparation? Should it be a File object?
         final RemoteConfig config = getConfiguration().getRemoteConfig();
-        final String keyPath = HomeFile.expandHomePath(config.getPublicKey());
-        session = new ExecRemoteSession(config.getServer(), config.getPort(), config.getUsername(), keyPath);
+        final File prvKey = new HomeFile(config.getPublicKey());
+        session = new ExecRemoteSession(config.getServer(), config.getPort(), config.getUsername(), prvKey);
     }
 
     private String createBuildCommand(final String gradleTask) {
