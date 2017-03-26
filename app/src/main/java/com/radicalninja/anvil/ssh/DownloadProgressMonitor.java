@@ -1,36 +1,17 @@
 package com.radicalninja.anvil.ssh;
 
 import com.jcraft.jsch.SftpProgressMonitor;
-import org.apache.commons.lang3.StringUtils;
-import org.fusesource.jansi.Ansi;
 
 import java.util.concurrent.CountDownLatch;
 
 class DownloadProgressMonitor implements SftpProgressMonitor {
 
-    private final Ansi ansi = Ansi.ansi();
     private final Progress progress = new Progress();
-    private final int maxBarLength;
 
-    private char progressFull = '*';
-    private char progressHalf = '~';
-    private char progressEmpty = '-';
-
-    private long maxSize;
-    private float lastPrinted;
+    private long downloaded, maxSize;
+    private int printed;
 
     private CountDownLatch countDownLatch = null;
-
-    public DownloadProgressMonitor() {
-        maxBarLength = 100;
-    }
-
-    public DownloadProgressMonitor(final int maxBarLength) {
-        if (maxBarLength < 1) { // TODO: make this req larger and/or add math value checks.
-            throw new IllegalArgumentException("maxBarLength cannot be less than 1");
-        }
-        this.maxBarLength = maxBarLength;
-    }
 
     public CountDownLatch obtainNewLock() throws InterruptedException {
         // TODO: This needs better concurrency protection/support before used in any serious capacity. Controlled sequences only
@@ -43,42 +24,45 @@ class DownloadProgressMonitor implements SftpProgressMonitor {
 
     @Override
     public void init(int op, String src, String dest, long max) {
+        this.downloaded = 0;
+        this.printed = 0;
         this.maxSize = max;
         System.out.printf("Downloading %s -> %s\n", src, dest); // TODO: IMPROVE THIS
-//        ansi.saveCursorPosition();
     }
 
     @Override
     public boolean count(long count) {
-        progress.calculate(count, maxSize);
-        // TODO: Add in some tracking to eliminate unnecessary screen refresh.
-            // TODO: Create a console writer utility for margins and refresh management?
-        final String progressBar = createProgressBar(count);
-        final String output = String.format("%d/%d (%s) %s", count, maxSize, progress.toString(), progressBar);
+        downloaded += count;
+        progress.calculate(downloaded, maxSize);
 
-//        ansi.restoreCursorPosition();
-        System.out.print(ansi.eraseLine().a(output));   // todo: beef up formatting
+        displayProgress();
+
         return true;
+    }
+
+    protected void displayProgress() {
+        // TODO: Should this be synchronized in case of multi-thread access? Investigate how the count() method gets called...
+        if (progress.major > printed) {
+            final StringBuilder sb = new StringBuilder();
+            for (int i = printed + 1; i <= progress.major; i++) {
+                final String insert;
+                if ((i % 5) == 0) {
+                    insert = String.format("%d%%", i);
+                } else {
+                    insert = ".";
+                }
+                final String append = String.format("%s ", insert);
+                sb.append(append);
+            }
+            System.out.print(sb.toString());
+            printed = progress.major;
+        }
     }
 
     @Override
     public void end() {
         System.out.printf("\nDownload finished!!\n");
-    }
-
-    private String createProgressBar(final float completed) {
-        final String full = StringUtils.repeat(progressFull, progress.major);
-        final int difference = maxBarLength - progress.major;
-        final String half;
-        final String empty;
-        if (progress.minor >= 50) { // TODO: compact this code
-            half = String.valueOf(progressHalf);
-            empty = StringUtils.repeat(progressEmpty, difference - 1);
-        } else {
-            half = "";
-            empty = StringUtils.repeat(progressEmpty, difference);
-        }
-        return String.format("[ %s%s%s ]", full, half, empty);
+        countDownLatch.countDown();
     }
 
     class Progress {
@@ -97,7 +81,7 @@ class DownloadProgressMonitor implements SftpProgressMonitor {
 
         @Override
         public String toString() {
-            return String.format("%d.%d%%", major, minor);
+            return String.format("%d.%02d%%", major, minor);
         }
     }
 

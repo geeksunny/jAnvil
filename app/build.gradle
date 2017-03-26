@@ -22,5 +22,4 @@ dependencies {
     compile "com.beust:jcommander:1.61"
     compile "com.google.code.gson:gson:2.8.0"
     compile "com.jcraft:jsch:0.1.54"
-    compile "org.fusesource.jansi:jansi:1.15"
 }
