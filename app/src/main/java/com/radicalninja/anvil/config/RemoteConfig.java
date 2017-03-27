@@ -5,7 +5,7 @@ public class RemoteConfig implements Configuration.Config {
     private String username;
     private String server;
     private int port;
-    private String publicKey;
+    private String privateKey;
     private String destinationPath;
 
     public String getUsername() {
@@ -20,8 +20,8 @@ public class RemoteConfig implements Configuration.Config {
         return port;
     }
 
-    public String getPublicKey() {
-        return publicKey;
+    public String getPrivateKey() {
+        return privateKey;
     }
 
     public String getDestinationPath() {
@@ -72,7 +72,7 @@ public class RemoteConfig implements Configuration.Config {
             remoteConfig.username = this.username;
             remoteConfig.destinationPath = this.destinationPath;
             remoteConfig.port = this.port;
-            remoteConfig.publicKey = this.publicKey;
+            remoteConfig.privateKey = this.publicKey;
             remoteConfig.server = this.server;
             return remoteConfig;
         }
