@@ -1,6 +1,7 @@
-package com.radicalninja.anvil;
+package com.radicalninja.anvil.tool;
 
 import com.jcraft.jsch.JSchException;
+import com.radicalninja.anvil.util.HomeFile;
 import com.radicalninja.anvil.config.Configuration;
 import com.radicalninja.anvil.config.GradleConfig;
 import com.radicalninja.anvil.config.RemoteConfig;

@@ -1,7 +1,8 @@
-package com.radicalninja.anvil;
+package com.radicalninja.anvil.tool;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import com.radicalninja.anvil.util.HomeFile;
 import com.radicalninja.anvil.config.Configuration;
 import com.radicalninja.anvil.config.RemoteConfig;
 import com.radicalninja.anvil.ssh.SftpRemoteSession;

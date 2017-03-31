@@ -1,6 +1,6 @@
 package com.radicalninja.anvil.data;
 
-import com.radicalninja.anvil.HomeFile;
+import com.radicalninja.anvil.util.HomeFile;
 import com.radicalninja.anvil.config.Configuration;
 
 import java.io.File;

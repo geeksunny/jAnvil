@@ -1,7 +1,7 @@
 package com.radicalninja.anvil.ssh;
 
 import com.jcraft.jsch.*;
-import com.radicalninja.anvil.HomeFile;
+import com.radicalninja.anvil.util.HomeFile;
 import com.radicalninja.anvil.util.TextUtils;
 
 import java.io.File;

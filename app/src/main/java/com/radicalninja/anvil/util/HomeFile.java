@@ -1,4 +1,4 @@
-package com.radicalninja.anvil;
+package com.radicalninja.anvil.util;
 
 import java.io.File;
 

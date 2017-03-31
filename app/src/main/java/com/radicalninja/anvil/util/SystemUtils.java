@@ -1,6 +1,5 @@
 package com.radicalninja.anvil.util;
 
-import com.radicalninja.anvil.HomeFile;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;

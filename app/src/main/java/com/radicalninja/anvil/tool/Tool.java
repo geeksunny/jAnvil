@@ -1,4 +1,4 @@
-package com.radicalninja.anvil;
+package com.radicalninja.anvil.tool;
 
 import com.radicalninja.anvil.config.Configuration;
 
@@ -14,6 +14,13 @@ public abstract class Tool {
 
     protected Configuration getConfiguration() {
         return configuration;
+    }
+
+    // TODO: This should be an abstract class for BuildTool and FilePuller
+    public interface SessionAware {
+        boolean connect();
+        boolean isConnected();
+        boolean close();    // rename to disconnect() ?
     }
 
 }

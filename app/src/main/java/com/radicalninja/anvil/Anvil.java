@@ -43,8 +43,7 @@ public class Anvil {
 //        final SyncTool syncTool = new SyncTool(configuration);
 //        syncTool.doSyncOperations();
 
-        final BuildTool buildTool = new BuildTool(configuration);
-        buildTool.testScp();
+//        final BuildTool buildTool = new BuildTool(configuration);
 //        buildTool.executeGradleTask("assembleStagingDebug");
     }
 
