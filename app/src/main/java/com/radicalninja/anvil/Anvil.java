@@ -7,6 +7,10 @@ import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.radicalninja.anvil.config.Configuration;
+import com.radicalninja.anvil.tool.AdbTool;
+import com.radicalninja.anvil.tool.BuildTool;
+import com.radicalninja.anvil.tool.FilePuller;
+import com.radicalninja.anvil.tool.SyncTool;
 import com.radicalninja.anvil.util.SystemUtils;
 
 import java.io.File;
@@ -40,11 +44,18 @@ public class Anvil {
         final Configuration configuration = loadConfig(new File("acmoore.json"));
         SystemUtils.setWorkingDirectory(configuration.getProjectConfig().getPath());
 
-//        final SyncTool syncTool = new SyncTool(configuration);
-//        syncTool.doSyncOperations();
+        final SyncTool syncTool = new SyncTool(configuration);
+        syncTool.doSyncOperations();
 
-//        final BuildTool buildTool = new BuildTool(configuration);
-//        buildTool.executeGradleTask("assembleStagingDebug");
+        final BuildTool buildTool = new BuildTool(configuration);
+        buildTool.executeGradleTask("assembleStagingDebug");
+
+        final FilePuller filePuller = new FilePuller(configuration);
+        // execute
+
+        final AdbTool adbTool = new AdbTool(configuration);
+        // install apk
+        adbTool.startDefaultActivity();
     }
 
     public static class Arguments {
