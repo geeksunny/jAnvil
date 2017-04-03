@@ -34,6 +34,8 @@ public class BuildTool extends Tool {
         final RemoteConfig config = getConfiguration().getRemoteConfig();
         final File prvKey = new HomeFile(config.getPrivateKey());
         session = new ExecRemoteSession(config.getServer(), config.getPort(), config.getUsername(), prvKey);
+        session.connect();
+        // TODO: Determine when / where we run session.close()
     }
 
     private String createBuildCommand(final String gradleTask) {

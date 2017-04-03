@@ -5,6 +5,7 @@ public class AnvilConfig implements Configuration.Config {
     private String tempDirName;
     private boolean useUserProperties;
     private boolean useProjectProperties;
+    private String adbBinaryPath;
 
     public String getTempDirName() {
         return tempDirName;
@@ -18,10 +19,15 @@ public class AnvilConfig implements Configuration.Config {
         return useProjectProperties;
     }
 
+    public String getAdbBinaryPath() {
+        return adbBinaryPath;
+    }
+
     public static final class Builder {
         private String tempDirName;
         private boolean useUserProperties;
         private boolean useProjectProperties;
+        private String adbBinaryPath;
 
         private Builder() {
         }
@@ -45,11 +51,17 @@ public class AnvilConfig implements Configuration.Config {
             return this;
         }
 
+        public Builder withAdbBinaryPath(String adbBinaryPath) {
+            this.adbBinaryPath = adbBinaryPath;
+            return this;
+        }
+
         public AnvilConfig build() {
             AnvilConfig anvilConfig = new AnvilConfig();
             anvilConfig.tempDirName = this.tempDirName;
             anvilConfig.useUserProperties = this.useUserProperties;
             anvilConfig.useProjectProperties = this.useProjectProperties;
+            anvilConfig.adbBinaryPath = this.adbBinaryPath;
             return anvilConfig;
         }
     }

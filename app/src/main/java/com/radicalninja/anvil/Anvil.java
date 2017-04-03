@@ -51,10 +51,10 @@ public class Anvil {
         buildTool.executeGradleTask("assembleStagingDebug");
 
         final FilePuller filePuller = new FilePuller(configuration);
-        // execute
+        final File buildResult = filePuller.pullBuildResult();
 
         final AdbTool adbTool = new AdbTool(configuration);
-        // install apk
+        adbTool.installApk(buildResult);
         adbTool.startDefaultActivity();
     }
 

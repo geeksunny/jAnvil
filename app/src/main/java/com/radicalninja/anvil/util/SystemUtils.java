@@ -77,15 +77,17 @@ public class SystemUtils {
         }
     }
 
-    public static String createPath(final String parent, final String ... children) {
-        final StringBuilder sb = new StringBuilder();
-        final String pathParent = StringUtils.stripEnd(parent, "/");
-        sb.append(pathParent);
-        for (final String child : children) {
-            sb.append("/");
-            final String pathChild = StringUtils.stripStart(child, "/");
-            sb.append(pathChild);
+    public static String createPath(final String ... chunks) {
+        if (null == chunks) {
+            return "";
+        } else if (chunks.length == 1) {
+            return chunks[0];
         }
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < chunks.length - 1; i++) {
+            sb.append(StringUtils.appendIfMissing(chunks[i], "/"));
+        }
+        sb.append(StringUtils.stripStart(chunks[chunks.length-1], "/"));
         return sb.toString();
     }
 

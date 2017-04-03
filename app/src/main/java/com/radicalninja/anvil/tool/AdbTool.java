@@ -3,6 +3,7 @@ package com.radicalninja.anvil.tool;
 import com.radicalninja.anvil.config.Configuration;
 import com.radicalninja.anvil.config.ProjectConfig;
 import com.radicalninja.anvil.util.ArrayUtils;
+import com.radicalninja.anvil.util.HomeFile;
 import com.radicalninja.anvil.util.SystemUtils;
 
 import java.io.File;
@@ -17,8 +18,12 @@ public class AdbTool extends Tool {
 
     private static final String DEFAULT_ACTIVITY_TEMPLATE = "%s/%s.%s";
 
+    private final String adbBinaryPath;
+
     public AdbTool(Configuration configuration) {
         super(configuration);
+        // TODO: Catch null pointer exceptions here or use default or something. To be handled upstream?
+        this.adbBinaryPath = HomeFile.expandHomePath(configuration.getAnvilConfig().getAdbBinaryPath());
     }
 
     public void installApk(final File apkFile) {
@@ -43,7 +48,7 @@ public class AdbTool extends Tool {
     protected List<String> startNewCommand() {
         // TODO: Device serial numbers would be established here as '-s','device_serial'
         final List<String> command = new LinkedList<>();
-        command.add("adb");
+        command.add(adbBinaryPath);
         return command;
     }
 

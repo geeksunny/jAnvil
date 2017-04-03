@@ -14,7 +14,9 @@ public class ProjectConfig implements Configuration.Config {
     private String projectPackage;
     private String startActivity;
     // remote
+    @SerializedName("result_directory")
     private String remoteResultDirectory;
+    @SerializedName("result_file")
     private String remoteResultFile;
     // rsync
     private List<String> excludeFromFiles;
