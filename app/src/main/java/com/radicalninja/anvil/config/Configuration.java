@@ -2,10 +2,9 @@ package com.radicalninja.anvil.config;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-import java.util.Map;
-
 public class Configuration {
+
+    public static final String DEFAULT_FILENAME = "/defaults.json";
 
     public interface Config {
         //

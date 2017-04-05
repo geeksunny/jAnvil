@@ -3,19 +3,19 @@ package com.radicalninja.anvil.config;
 public class AnvilConfig implements Configuration.Config {
 
     private String tempDirName;
-    private boolean useUserProperties;
-    private boolean useProjectProperties;
+    private Boolean useUserProperties;
+    private Boolean useProjectProperties;
     private String adbBinaryPath;
 
     public String getTempDirName() {
         return tempDirName;
     }
 
-    public boolean useUserProperties() {
+    public Boolean useUserProperties() {
         return useUserProperties;
     }
 
-    public boolean useProjectProperties() {
+    public Boolean useProjectProperties() {
         return useProjectProperties;
     }
 
@@ -25,8 +25,8 @@ public class AnvilConfig implements Configuration.Config {
 
     public static final class Builder {
         private String tempDirName;
-        private boolean useUserProperties;
-        private boolean useProjectProperties;
+        private Boolean useUserProperties;
+        private Boolean useProjectProperties;
         private String adbBinaryPath;
 
         private Builder() {
@@ -41,12 +41,12 @@ public class AnvilConfig implements Configuration.Config {
             return this;
         }
 
-        public Builder withUseUserProperties(boolean useUserProperties) {
+        public Builder withUseUserProperties(Boolean useUserProperties) {
             this.useUserProperties = useUserProperties;
             return this;
         }
 
-        public Builder withUseProjectProperties(boolean useProjectProperties) {
+        public Builder withUseProjectProperties(Boolean useProjectProperties) {
             this.useProjectProperties = useProjectProperties;
             return this;
         }

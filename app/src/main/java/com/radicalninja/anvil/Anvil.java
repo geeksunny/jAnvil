@@ -13,8 +13,7 @@ import com.radicalninja.anvil.tool.FilePuller;
 import com.radicalninja.anvil.tool.SyncTool;
 import com.radicalninja.anvil.util.SystemUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +36,13 @@ public class Anvil {
     public Configuration loadConfig(final File file) throws IOException {
         final String json = SystemUtils.getFileContents(file);
         return gson.fromJson(json, Configuration.class);
+    }
+
+    public Configuration loadDefaultConfig() {
+        // TODO: Should this be moved to
+        final InputStream in = getClass().getResourceAsStream(Configuration.DEFAULT_FILENAME);
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        return gson.fromJson(reader, Configuration.class);
     }
 
     public void run() throws IOException, JSchException, SftpException, InterruptedException {
